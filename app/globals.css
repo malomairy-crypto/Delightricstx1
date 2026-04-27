@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/* ── Delightrics Design Tokens ─────────────────────────────────────────── */
+:root {
+  /* Surface */
+  --color-surface:        #0d1117;
+  --color-surface-raised: #161b22;
+  --color-surface-border: #21262d;
+
+  /* Content */
+  --color-content:        #e6edf3;
+  --color-content-muted:  #8b949e;
+  --color-content-faint:  #30363d;
+
+  /* Brand accents */
+  --color-accent-cyan:    #22d3ee;
+  --color-accent-violet:  #a78bfa;
+  --color-accent-emerald: #34d399;
+  --color-accent-orange:  #fb923c;
+  --color-accent-pink:    #f472b6;
+
+  /* Semantic */
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger:  #f87171;
+}
+
+/* ── Tailwind v4 theme extension ───────────────────────────────────────── */
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --color-surface:        var(--color-surface);
+  --color-surface-raised: var(--color-surface-raised);
+  --color-surface-border: var(--color-surface-border);
+  --color-content:        var(--color-content);
+  --color-content-muted:  var(--color-content-muted);
+  --color-content-faint:  var(--color-content-faint);
+  --color-accent-cyan:    var(--color-accent-cyan);
+  --color-accent-violet:  var(--color-accent-violet);
+  --color-accent-emerald: var(--color-accent-emerald);
+  --color-accent-orange:  var(--color-accent-orange);
+  --color-accent-pink:    var(--color-accent-pink);
+  --color-success:        var(--color-success);
+  --color-warning:        var(--color-warning);
+  --color-danger:         var(--color-danger);
+}
+
+/* ── Base resets ───────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle grid texture overlay on body */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-surface); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-content-muted); }
