@@ -1,8 +1,10 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { activeTenant } from '@/lib/data'
 import { useSidebar } from '@/components/SidebarProvider'
+import { useDashboard } from '@/components/DashboardProvider'
+import { mockTenants } from '@/lib/data'
+import PeriodSelector from '@/components/PeriodSelector'
 
 const BREADCRUMBS: Record<string, { label: string; color: string }> = {
   '/':    { label: 'Dashboard',                  color: '' },
@@ -11,16 +13,6 @@ const BREADCRUMBS: Record<string, { label: string; color: string }> = {
   '/nps': { label: 'Net Promoter Score',         color: '#34d399' },
   '/ehs': { label: 'Employee Happiness Score',   color: '#fb923c' },
   '/ox':  { label: 'Operational Excellence',     color: '#f472b6' },
-}
-
-function CalendarIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-      <rect x="1" y="2.5" width="11" height="9.5" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
-      <path d="M1 6h11" stroke="currentColor" strokeWidth="1.2" />
-      <path d="M4.5 1v3M8.5 1v3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-    </svg>
-  )
 }
 
 function MenuIcon() {
@@ -34,7 +26,9 @@ function MenuIcon() {
 export default function TopBar() {
   const pathname = usePathname()
   const { toggle } = useSidebar()
+  const { tenantId } = useDashboard()
   const crumb = BREADCRUMBS[pathname] ?? BREADCRUMBS['/']
+  const tenant = mockTenants.find((t) => t.id === tenantId) ?? mockTenants[0]
 
   return (
     <header className="flex items-center justify-between px-4 md:px-6 h-14 shrink-0 border-b border-surface-border bg-surface-raised">
@@ -70,15 +64,12 @@ export default function TopBar() {
         </div>
       </div>
 
-      {/* Right: tenant + period */}
+      {/* Right: industry badge + period selector */}
       <div className="flex items-center gap-3 shrink-0">
         <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-border text-content-muted uppercase tracking-wider hidden md:block">
-          {activeTenant.industry}
+          {tenant.industry}
         </span>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-md border border-surface-border bg-surface text-sm font-mono text-content-muted cursor-default select-none">
-          <CalendarIcon />
-          <span>Q1 2026</span>
-        </div>
+        <PeriodSelector />
       </div>
     </header>
   )

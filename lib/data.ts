@@ -1,6 +1,54 @@
-import type { Tenant } from '@/types';
+import type { Tenant, KPI, KPISummary, TrendDirection } from '@/types'
+
+export const PERIODS = ['Q1 2026', 'Q4 2025', 'Q3 2025', 'Q2 2025'] as const
+export type Period = (typeof PERIODS)[number]
+
+const PERIOD_STEPS: Record<string, number> = {
+  'Q1 2026': 0,
+  'Q4 2025': 1,
+  'Q3 2025': 2,
+  'Q2 2025': 3,
+}
+
+function shiftKPI(kpi: KPI, steps: number, periodLabel: string): KPI {
+  if (steps === 0) return kpi
+
+  const h = kpi.history // 8 points, oldest → newest
+  const slope = h[1] - h[0]
+
+  // Extrapolate 'steps' points before h[0]
+  const extrapolated = Array.from({ length: steps }, (_, i) =>
+    parseFloat((h[0] - slope * (steps - i)).toFixed(1))
+  )
+
+  const newHistory = [...extrapolated, ...h.slice(0, 8 - steps)]
+  const value = parseFloat(newHistory[7].toFixed(1))
+  const diff = parseFloat((newHistory[7] - newHistory[6]).toFixed(2))
+  const trend: TrendDirection = Math.abs(diff) < 0.1 ? 'stable' : diff > 0 ? 'up' : 'down'
+
+  return {
+    ...kpi,
+    value,
+    trend,
+    trendValue: parseFloat(diff.toFixed(1)),
+    period: periodLabel,
+    history: newHistory,
+  }
+}
+
+export function getKPISummaries(tenantId: string, period: Period): KPISummary[] {
+  const tenant = mockTenants.find((t) => t.id === tenantId) ?? mockTenants[0]
+  const steps = PERIOD_STEPS[period] ?? 0
+  if (steps === 0) return tenant.kpiSummaries
+
+  return tenant.kpiSummaries.map((summary) => ({
+    ...summary,
+    kpis: summary.kpis.map((kpi) => shiftKPI(kpi, steps, period)),
+  }))
+}
 
 export const mockTenants: Tenant[] = [
+  // ── Tenant 1: Delightrics Demo Corp (Retail) ────────────────────────────
   {
     id: 'tenant-001',
     name: 'Delightrics Demo Corp',
@@ -238,6 +286,245 @@ export const mockTenants: Tenant[] = [
       },
     ],
   },
-];
 
-export const activeTenant = mockTenants[0];
+  // ── Tenant 2: Acme SaaS Corp ─────────────────────────────────────────────
+  {
+    id: 'tenant-002',
+    name: 'Acme SaaS Corp',
+    industry: 'SaaS',
+    kpiSummaries: [
+      {
+        category: 'CHS',
+        title: 'Customer Happiness Score',
+        color: '#22d3ee',
+        kpis: [
+          {
+            id: 'chs-overall-002',
+            category: 'CHS',
+            label: 'Overall CHS',
+            description: 'Weighted average happiness across all touchpoints',
+            value: 91,
+            target: 93,
+            unit: '%',
+            trend: 'up',
+            trendValue: 1.5,
+            period: 'Q1 2026',
+            history: [87, 88, 88, 89, 89, 90, 90, 91],
+          },
+          {
+            id: 'chs-post-purchase-002',
+            category: 'CHS',
+            label: 'Post-Purchase CHS',
+            description: 'Happiness score after subscription renewal',
+            value: 94,
+            target: 95,
+            unit: '%',
+            trend: 'up',
+            trendValue: 0.8,
+            period: 'Q1 2026',
+            history: [91, 92, 92, 93, 93, 93, 94, 94],
+          },
+          {
+            id: 'chs-support-002',
+            category: 'CHS',
+            label: 'Support CHS',
+            description: 'Happiness score after support interactions',
+            value: 88,
+            target: 90,
+            unit: '%',
+            trend: 'up',
+            trendValue: 1.2,
+            period: 'Q1 2026',
+            history: [84, 85, 85, 86, 87, 87, 88, 88],
+          },
+        ],
+      },
+      {
+        category: 'CES',
+        title: 'Customer Effort Score',
+        color: '#a78bfa',
+        kpis: [
+          {
+            id: 'ces-overall-002',
+            category: 'CES',
+            label: 'Overall CES',
+            description: 'How easy it is to use the platform (lower = better)',
+            value: 1.8,
+            target: 1.5,
+            unit: '/7',
+            trend: 'down',
+            trendValue: -0.3,
+            period: 'Q1 2026',
+            history: [2.3, 2.2, 2.1, 2.1, 2.0, 1.9, 1.9, 1.8],
+          },
+          {
+            id: 'ces-onboarding-002',
+            category: 'CES',
+            label: 'Onboarding CES',
+            description: 'Effort score during initial product onboarding',
+            value: 1.4,
+            target: 1.2,
+            unit: '/7',
+            trend: 'down',
+            trendValue: -0.5,
+            period: 'Q1 2026',
+            history: [2.1, 2.0, 1.9, 1.8, 1.7, 1.6, 1.5, 1.4],
+          },
+          {
+            id: 'ces-support-002',
+            category: 'CES',
+            label: 'Support CES',
+            description: 'Effort score when contacting support',
+            value: 2.2,
+            target: 2.0,
+            unit: '/7',
+            trend: 'down',
+            trendValue: -0.2,
+            period: 'Q1 2026',
+            history: [2.5, 2.5, 2.4, 2.4, 2.3, 2.3, 2.2, 2.2],
+          },
+        ],
+      },
+      {
+        category: 'NPS',
+        title: 'Net Promoter Score',
+        color: '#34d399',
+        kpis: [
+          {
+            id: 'nps-overall-002',
+            category: 'NPS',
+            label: 'Overall NPS',
+            description: 'Likelihood to recommend (−100 to +100)',
+            value: 68,
+            target: 72,
+            unit: '',
+            trend: 'up',
+            trendValue: 4.0,
+            period: 'Q1 2026',
+            history: [57, 59, 61, 62, 64, 65, 67, 68],
+          },
+          {
+            id: 'nps-promoters-002',
+            category: 'NPS',
+            label: 'Promoters',
+            description: 'Percentage of customers scoring 9–10',
+            value: 72,
+            target: 76,
+            unit: '%',
+            trend: 'up',
+            trendValue: 3.5,
+            period: 'Q1 2026',
+            history: [64, 65, 66, 67, 68, 70, 71, 72],
+          },
+          {
+            id: 'nps-detractors-002',
+            category: 'NPS',
+            label: 'Detractors',
+            description: 'Percentage of customers scoring 0–6',
+            value: 9,
+            target: 7,
+            unit: '%',
+            trend: 'down',
+            trendValue: -1.2,
+            period: 'Q1 2026',
+            history: [12, 11.5, 11, 10.5, 10, 9.5, 9.2, 9.0],
+          },
+        ],
+      },
+      {
+        category: 'EHS',
+        title: 'Employee Happiness Score',
+        color: '#fb923c',
+        kpis: [
+          {
+            id: 'ehs-overall-002',
+            category: 'EHS',
+            label: 'Overall EHS',
+            description: 'Employee satisfaction averaged across departments',
+            value: 82,
+            target: 88,
+            unit: '%',
+            trend: 'up',
+            trendValue: 1.8,
+            period: 'Q1 2026',
+            history: [77, 78, 78, 79, 80, 80, 81, 82],
+          },
+          {
+            id: 'ehs-engagement-002',
+            category: 'EHS',
+            label: 'Engagement Score',
+            description: 'Active engagement in work and culture',
+            value: 77,
+            target: 82,
+            unit: '%',
+            trend: 'up',
+            trendValue: 0.5,
+            period: 'Q1 2026',
+            history: [74, 74, 75, 75, 76, 76, 77, 77],
+          },
+          {
+            id: 'ehs-retention-002',
+            category: 'EHS',
+            label: 'Retention Index',
+            description: 'Likelihood employees remain for 12+ months',
+            value: 91,
+            target: 92,
+            unit: '%',
+            trend: 'up',
+            trendValue: 0.6,
+            period: 'Q1 2026',
+            history: [89, 89, 90, 90, 90, 91, 91, 91],
+          },
+        ],
+      },
+      {
+        category: 'OX',
+        title: 'Operational Excellence',
+        color: '#f472b6',
+        kpis: [
+          {
+            id: 'ox-uptime-002',
+            category: 'OX',
+            label: 'Platform Uptime',
+            description: 'Service availability across all regions',
+            value: 99.8,
+            target: 99.9,
+            unit: '%',
+            trend: 'up',
+            trendValue: 0.2,
+            period: 'Q1 2026',
+            history: [99.2, 99.4, 99.5, 99.6, 99.6, 99.7, 99.8, 99.8],
+          },
+          {
+            id: 'ox-resolution-time-002',
+            category: 'OX',
+            label: 'Avg Resolution Time',
+            description: 'Mean time to resolve a support ticket',
+            value: 3.1,
+            target: 2.5,
+            unit: 'hrs',
+            trend: 'down',
+            trendValue: -0.3,
+            period: 'Q1 2026',
+            history: [3.7, 3.6, 3.5, 3.4, 3.3, 3.3, 3.2, 3.1],
+          },
+          {
+            id: 'ox-first-contact-002',
+            category: 'OX',
+            label: 'First Contact Resolution',
+            description: 'Issues resolved on the first contact',
+            value: 87,
+            target: 90,
+            unit: '%',
+            trend: 'up',
+            trendValue: 1.5,
+            period: 'Q1 2026',
+            history: [82, 83, 83, 84, 85, 85, 86, 87],
+          },
+        ],
+      },
+    ],
+  },
+]
+
+export const activeTenant = mockTenants[0]

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSidebar } from '@/components/SidebarProvider'
+import TenantSwitcher from '@/components/TenantSwitcher'
 import type { KPICategory } from '@/types'
 
 const NAV_ITEMS: { category: KPICategory; label: string; href: string; color: string }[] = [
@@ -22,11 +23,9 @@ export default function Sidebar() {
       className={[
         'flex flex-col w-60 shrink-0 h-full overflow-y-auto',
         'bg-surface-raised border-r border-surface-border',
-        // Mobile: fixed overlay, slides in/out
         'fixed inset-y-0 left-0 z-40',
         'transition-transform duration-200 ease-out',
         open ? 'translate-x-0' : '-translate-x-full',
-        // Desktop: static, always visible
         'md:relative md:inset-auto md:z-auto md:translate-x-0',
       ].join(' ')}
     >
@@ -39,8 +38,6 @@ export default function Sidebar() {
           Dx
         </div>
         <span className="font-semibold text-sm text-content flex-1">Delightrics</span>
-
-        {/* Close button — mobile only */}
         <button
           onClick={close}
           className="md:hidden p-1 rounded text-content-faint hover:text-content-muted transition-colors"
@@ -57,7 +54,6 @@ export default function Sidebar() {
         <span className="px-3 py-1 text-[10px] font-mono uppercase tracking-widest text-content-faint">
           Overview
         </span>
-
         <Link
           href="/"
           onClick={close}
@@ -103,9 +99,17 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Version footer */}
-      <div className="px-5 py-3 border-t border-surface-border shrink-0">
-        <span className="font-mono text-[10px] text-content-faint">v0.4.0-alpha</span>
+      {/* Tenant switcher + version */}
+      <div className="border-t border-surface-border shrink-0">
+        <div className="pt-2">
+          <span className="px-6 text-[10px] font-mono uppercase tracking-widest text-content-faint">
+            Workspace
+          </span>
+          <TenantSwitcher />
+        </div>
+        <div className="px-5 pb-3">
+          <span className="font-mono text-[10px] text-content-faint">v0.5.0-alpha</span>
+        </div>
       </div>
     </aside>
   )

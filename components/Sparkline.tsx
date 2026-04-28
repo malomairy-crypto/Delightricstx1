@@ -3,9 +3,10 @@ interface SparklineProps {
   color: string
   width?: number
   height?: number
+  responsive?: boolean
 }
 
-export default function Sparkline({ data, color, width = 80, height = 28 }: SparklineProps) {
+export default function Sparkline({ data, color, width = 80, height = 28, responsive = false }: SparklineProps) {
   if (data.length < 2) return null
 
   const min = Math.min(...data)
@@ -23,11 +24,13 @@ export default function Sparkline({ data, color, width = 80, height = 28 }: Spar
 
   return (
     <svg
-      width={width}
-      height={height}
+      width={responsive ? '100%' : width}
+      height={responsive ? '100%' : height}
       viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio={responsive ? 'none' : undefined}
       fill="none"
       aria-hidden="true"
+      style={responsive ? { display: 'block' } : undefined}
     >
       <polyline
         points={pts}
