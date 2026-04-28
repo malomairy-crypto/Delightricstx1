@@ -1,7 +1,7 @@
 # Delightrics — Project State
 
 ## Current Step
-**Step 4 — Complete**
+**Step 6 — Complete**
 
 ---
 
@@ -47,6 +47,16 @@
 - `lib/data.ts` — added 8-point history array to all 15 KPIs
 - `app/loading.tsx` + `app/_loading-category.tsx` + 5 route `loading.tsx` files — pulse-animated skeletons
 
+### Step 5: Interactivity & Data
+- `components/DashboardProvider.tsx` — React Context managing `tenantId` + `period` with setters; default Q1 2026 / tenant-001
+- `components/PeriodSelector.tsx` — dropdown listing all 4 periods; reads/sets via `useDashboard()`; click-outside-to-close backdrop
+- `components/TenantSwitcher.tsx` — dropdown listing mock tenants; reads/sets via `useDashboard()`; shows name + industry
+- `components/KPIModal.tsx` — full-screen drill-down modal; ESC key to close; large sparkline (responsive SVG), 3-stat grid, progress bar
+- `components/KPICard.tsx` — updated to `'use client'`; wraps as `<button>` opening `KPIModal` on click
+- `app/layout.tsx` — wrapped with `DashboardProvider` (outermost), `TopBar` updated to consume it for period/tenant display
+- `app/page.tsx` — updated to `'use client'`; reads `tenantId + period` from context; status badges (On Track / At Risk / Off Track)
+- `app/chs|ces|nps|ehs|ox/page.tsx` — all updated to `'use client'`; read tenant + period from context
+
 ### Folder Structure
 ```
 mho1-274/
@@ -63,11 +73,15 @@ mho1-274/
 │   └── page.tsx               # Dashboard overview
 ├── components/
 │   ├── CategoryPage.tsx
+│   ├── DashboardProvider.tsx
 │   ├── KPICard.tsx
+│   ├── KPIModal.tsx
 │   ├── MobileBackdrop.tsx
+│   ├── PeriodSelector.tsx
 │   ├── Sidebar.tsx
 │   ├── SidebarProvider.tsx
 │   ├── Sparkline.tsx
+│   ├── TenantSwitcher.tsx
 │   └── TopBar.tsx
 ├── lib/data.ts
 ├── types/index.ts
@@ -77,12 +91,17 @@ mho1-274/
 
 ---
 
+### Step 6: localStorage Persistence
+- `components/DashboardProvider.tsx` — updated; reads `delightrics-tenant` + `delightrics-period` from localStorage on mount; validates stored values against known tenants/periods before applying; writes to localStorage immediately on each setter call
+- Survives hard refresh; gracefully falls back to defaults if stored values are stale or invalid
+
+---
+
 ## Next Step
-**Step 5: Interactivity & Data**
-- Period selector — make the "Q1 2026" pill interactive; switching periods filters all KPI values across every page
-- Status badges — on track / at risk / off track labels on the overview dashboard cards
-- KPI drill-down — click a KPI card to expand a larger chart showing the full 8-point history
-- Tenant switcher — dropdown in Sidebar to swap between demo tenants
+**Step 7: Supabase Integration** *(replace mock data with a real Postgres database)*
+- Create Supabase project + schema (tenants, kpi_categories, kpis tables)
+- Replace `lib/data.ts` mock with Supabase client queries
+- Real-time data; per-tenant row-level security
 
 ---
 
