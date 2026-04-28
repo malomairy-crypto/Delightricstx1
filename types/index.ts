@@ -13,6 +13,7 @@ export interface KPI {
   trend: TrendDirection;
   trendValue: number; // percentage change vs. previous period
   period: string;     // e.g. "Q1 2026"
+  history: number[];  // 8 data points oldest→newest, for sparkline
 }
 
 export interface KPISummary {

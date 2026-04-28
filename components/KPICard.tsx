@@ -1,4 +1,5 @@
 import type { KPI } from '@/types'
+import Sparkline from '@/components/Sparkline'
 
 interface KPICardProps {
   kpi: KPI
@@ -43,6 +44,8 @@ export default function KPICard({ kpi, color, isInverted = false }: KPICardProps
     ? kpi.value <= kpi.target
     : kpi.value >= kpi.target
 
+  const sparklineColor = isPositive === null ? color : isPositive ? '#34d399' : '#f87171'
+
   return (
     <div className="flex flex-col gap-5 p-6 rounded-xl border border-surface-border bg-surface-raised">
       {/* Label + trend chip */}
@@ -61,14 +64,17 @@ export default function KPICard({ kpi, color, isInverted = false }: KPICardProps
         {kpi.description}
       </p>
 
-      {/* Primary value */}
-      <div className="flex items-baseline gap-2">
-        <span className="text-4xl font-semibold text-content font-mono tabular-nums leading-none">
-          {kpi.value}
-        </span>
-        {kpi.unit && (
-          <span className="text-base text-content-muted">{kpi.unit}</span>
-        )}
+      {/* Value + sparkline */}
+      <div className="flex items-end justify-between gap-3">
+        <div className="flex items-baseline gap-2">
+          <span className="text-4xl font-semibold text-content font-mono tabular-nums leading-none">
+            {kpi.value}
+          </span>
+          {kpi.unit && (
+            <span className="text-base text-content-muted">{kpi.unit}</span>
+          )}
+        </div>
+        <Sparkline data={kpi.history} color={sparklineColor} width={80} height={28} />
       </div>
 
       {/* Progress toward target */}

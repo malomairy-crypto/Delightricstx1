@@ -9,7 +9,7 @@ export const mockTenants: Tenant[] = [
       {
         category: 'CHS',
         title: 'Customer Happiness Score',
-        color: '#22d3ee', // cyan-400
+        color: '#22d3ee',
         kpis: [
           {
             id: 'chs-overall',
@@ -22,6 +22,7 @@ export const mockTenants: Tenant[] = [
             trend: 'up',
             trendValue: 3.2,
             period: 'Q1 2026',
+            history: [76, 77, 79, 80, 81, 82, 83, 84],
           },
           {
             id: 'chs-post-purchase',
@@ -34,6 +35,7 @@ export const mockTenants: Tenant[] = [
             trend: 'up',
             trendValue: 1.8,
             period: 'Q1 2026',
+            history: [83, 84, 85, 86, 86, 87, 87, 88],
           },
           {
             id: 'chs-support',
@@ -46,13 +48,14 @@ export const mockTenants: Tenant[] = [
             trend: 'down',
             trendValue: -2.1,
             period: 'Q1 2026',
+            history: [80, 79, 78, 78, 77, 77, 77, 76],
           },
         ],
       },
       {
         category: 'CES',
         title: 'Customer Effort Score',
-        color: '#a78bfa', // violet-400
+        color: '#a78bfa',
         kpis: [
           {
             id: 'ces-overall',
@@ -65,6 +68,7 @@ export const mockTenants: Tenant[] = [
             trend: 'down',
             trendValue: -0.4,
             period: 'Q1 2026',
+            history: [2.8, 2.7, 2.6, 2.6, 2.5, 2.4, 2.4, 2.3],
           },
           {
             id: 'ces-checkout',
@@ -77,6 +81,7 @@ export const mockTenants: Tenant[] = [
             trend: 'down',
             trendValue: -0.6,
             period: 'Q1 2026',
+            history: [2.6, 2.4, 2.3, 2.2, 2.1, 2.0, 2.0, 1.9],
           },
           {
             id: 'ces-returns',
@@ -89,13 +94,14 @@ export const mockTenants: Tenant[] = [
             trend: 'stable',
             trendValue: 0.0,
             period: 'Q1 2026',
+            history: [3.0, 3.2, 3.1, 3.0, 3.2, 3.1, 3.0, 3.1],
           },
         ],
       },
       {
         category: 'NPS',
         title: 'Net Promoter Score',
-        color: '#34d399', // emerald-400
+        color: '#34d399',
         kpis: [
           {
             id: 'nps-overall',
@@ -108,6 +114,7 @@ export const mockTenants: Tenant[] = [
             trend: 'up',
             trendValue: 5.0,
             period: 'Q1 2026',
+            history: [42, 44, 46, 47, 49, 50, 51, 52],
           },
           {
             id: 'nps-promoters',
@@ -120,6 +127,7 @@ export const mockTenants: Tenant[] = [
             trend: 'up',
             trendValue: 4.2,
             period: 'Q1 2026',
+            history: [55, 57, 59, 60, 61, 62, 63, 64],
           },
           {
             id: 'nps-detractors',
@@ -132,13 +140,14 @@ export const mockTenants: Tenant[] = [
             trend: 'down',
             trendValue: -0.8,
             period: 'Q1 2026',
+            history: [13.5, 13.2, 13.0, 12.8, 12.6, 12.4, 12.2, 12.0],
           },
         ],
       },
       {
         category: 'EHS',
         title: 'Employee Happiness Score',
-        color: '#fb923c', // orange-400
+        color: '#fb923c',
         kpis: [
           {
             id: 'ehs-overall',
@@ -151,6 +160,7 @@ export const mockTenants: Tenant[] = [
             trend: 'up',
             trendValue: 2.5,
             period: 'Q1 2026',
+            history: [71, 72, 73, 74, 75, 76, 77, 78],
           },
           {
             id: 'ehs-engagement',
@@ -163,6 +173,7 @@ export const mockTenants: Tenant[] = [
             trend: 'stable',
             trendValue: 0.3,
             period: 'Q1 2026',
+            history: [71, 72, 71, 72, 71, 72, 72, 72],
           },
           {
             id: 'ehs-retention',
@@ -175,13 +186,14 @@ export const mockTenants: Tenant[] = [
             trend: 'up',
             trendValue: 1.2,
             period: 'Q1 2026',
+            history: [85, 85, 86, 86, 87, 87, 87, 88],
           },
         ],
       },
       {
         category: 'OX',
         title: 'Operational Excellence',
-        color: '#f472b6', // pink-400
+        color: '#f472b6',
         kpis: [
           {
             id: 'ox-fulfillment',
@@ -194,6 +206,7 @@ export const mockTenants: Tenant[] = [
             trend: 'up',
             trendValue: 0.9,
             period: 'Q1 2026',
+            history: [94.6, 95.0, 95.3, 95.6, 95.8, 96.0, 96.2, 96.4],
           },
           {
             id: 'ox-resolution-time',
@@ -206,6 +219,7 @@ export const mockTenants: Tenant[] = [
             trend: 'down',
             trendValue: -0.5,
             period: 'Q1 2026',
+            history: [4.9, 4.8, 4.7, 4.5, 4.4, 4.3, 4.3, 4.2],
           },
           {
             id: 'ox-first-contact',
@@ -218,6 +232,7 @@ export const mockTenants: Tenant[] = [
             trend: 'up',
             trendValue: 2.0,
             period: 'Q1 2026',
+            history: [75, 76, 77, 78, 79, 80, 80, 81],
           },
         ],
       },
