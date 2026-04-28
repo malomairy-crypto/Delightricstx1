@@ -1,7 +1,7 @@
 # Delightrics — Project State
 
 ## Current Step
-**Step 1 — Complete**
+**Step 2 — Complete**
 
 ---
 
@@ -13,17 +13,35 @@
 - Established design token system in `app/globals.css` (dark surface palette, 5 KPI accent colors, grid texture, custom scrollbar)
 - Created `types/index.ts` — shared TypeScript types: `KPI`, `KPICategory`, `KPISummary`, `Tenant`, `TrendDirection`
 - Created `lib/data.ts` — centralized mock data with one demo tenant containing all 5 KPI categories (CHS, CES, NPS, EHS, OX), each with 3 typed KPIs
-- Created `components/` folder (empty, ready for components)
 - Minimal placeholder `app/page.tsx` confirming tokens and fonts render correctly
+
+### Step 2: Shell Layout
+- Created `components/Sidebar.tsx` (Client Component — uses `usePathname` for active link highlighting)
+  - Delightrics `Dx` brand mark + wordmark at top
+  - "Dashboard" overview link (active on `/`)
+  - KPI category nav links: CHS, CES, NPS, EHS, OX — each with its accent color
+  - Active state: filled background + colored category badge
+  - Version footer
+- Created `components/TopBar.tsx` (Server Component)
+  - Tenant name + industry badge on the left
+  - Period selector pill (Q1 2026) on the right
+- Updated `app/layout.tsx` — wires Sidebar + TopBar into the root shell
+  - `flex h-full` layout: `<Sidebar />` | `<div flex-col>` → `<TopBar />` + `<main overflow-auto>`
+- Updated `app/page.tsx` — dashboard overview with 5 KPI summary cards
+  - `KPISummaryCard`: category badge, primary KPI value, trend indicator, progress bar toward target
+  - CES direction correctly inverted (lower = better)
+  - `grid-cols-1 sm:2 lg:3 xl:5` responsive grid
 
 ### Folder Structure
 ```
 mho1-274/
 ├── app/
 │   ├── globals.css       # Design tokens + base styles
-│   ├── layout.tsx        # Root layout with fonts and metadata
-│   └── page.tsx          # Step 1 placeholder
-├── components/           # UI components (populated from Step 2)
+│   ├── layout.tsx        # Root layout — shell (Sidebar + TopBar + main)
+│   └── page.tsx          # Dashboard overview (5 KPI summary cards)
+├── components/
+│   ├── Sidebar.tsx       # Left nav (Client Component)
+│   └── TopBar.tsx        # Top header (Server Component)
 ├── lib/
 │   └── data.ts           # Centralized mock KPI data
 ├── types/
@@ -35,10 +53,10 @@ mho1-274/
 ---
 
 ## Next Step
-**Step 2: Shell Layout**
-- Sidebar navigation (with KPI category links)
-- Top bar (tenant name, period selector placeholder)
-- Responsive frame that all future pages slot into
+**Step 3: KPI Category Pages**
+- Individual pages for `/chs`, `/ces`, `/nps`, `/ehs`, `/ox`
+- Each page: category header, 3 KPI detail cards with value / target / trend / description
+- Reusable `KPICard` component
 
 ---
 
