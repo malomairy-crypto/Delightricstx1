@@ -1,7 +1,7 @@
 # Delightrics — Project State
 
 ## Current Step
-**Step 2 — Complete**
+**Step 3 — Complete**
 
 ---
 
@@ -12,71 +12,71 @@
 - Configured `DM Sans` + `DM Mono` as the project font pair
 - Established design token system in `app/globals.css` (dark surface palette, 5 KPI accent colors, grid texture, custom scrollbar)
 - Created `types/index.ts` — shared TypeScript types: `KPI`, `KPICategory`, `KPISummary`, `Tenant`, `TrendDirection`
-- Created `lib/data.ts` — centralized mock data with one demo tenant containing all 5 KPI categories (CHS, CES, NPS, EHS, OX), each with 3 typed KPIs
-- Minimal placeholder `app/page.tsx` confirming tokens and fonts render correctly
+- Created `lib/data.ts` — centralized mock data with one demo tenant and 5 KPI categories (CHS, CES, NPS, EHS, OX), each with 3 typed KPIs
 
 ### Step 2: Shell Layout
-- Created `components/Sidebar.tsx` (Client Component — uses `usePathname` for active link highlighting)
-  - Delightrics `Dx` brand mark + wordmark at top
-  - "Dashboard" overview link (active on `/`)
-  - KPI category nav links: CHS, CES, NPS, EHS, OX — each with its accent color
-  - Active state: filled background + colored category badge
-  - Version footer
-- Created `components/TopBar.tsx` (Server Component)
-  - Tenant name + industry badge on the left
-  - Period selector pill (Q1 2026) on the right
-- Updated `app/layout.tsx` — wires Sidebar + TopBar into the root shell
-  - `flex h-full` layout: `<Sidebar />` | `<div flex-col>` → `<TopBar />` + `<main overflow-auto>`
-- Updated `app/page.tsx` — dashboard overview with 5 KPI summary cards
-  - `KPISummaryCard`: category badge, primary KPI value, trend indicator, progress bar toward target
-  - CES direction correctly inverted (lower = better)
-  - `grid-cols-1 sm:2 lg:3 xl:5` responsive grid
+- `components/Sidebar.tsx` — Client Component; `usePathname` active links, brand mark, KPI category nav with accent colors
+- `components/TopBar.tsx` — Server Component; tenant name, industry badge, period pill
+- `app/layout.tsx` — root shell: `<Sidebar>` + `<TopBar>` + `<main>`
+- `app/page.tsx` — dashboard overview: 5 KPI summary cards in responsive grid
+
+### Step 3: KPI Category Pages
+- `components/KPICard.tsx` — reusable detail card (Server Component)
+  - Label + trend chip (color-coded good/bad, CES direction inverted)
+  - Description text
+  - Large primary value + unit
+  - Progress bar with `% of target` label; turns green when at/beyond target
+  - Period footer + accent dot
+- `components/CategoryPage.tsx` — shared page shell (Server Component)
+  - Category badge, full title, period, metric count, "X/3 at target" status
+  - `grid-cols-1 md:2 lg:3` KPI card grid
+  - Passes `isInverted` to KPICard for CES
+- `app/chs/page.tsx` — `/chs` → CHS (cyan)
+- `app/ces/page.tsx` — `/ces` → CES (violet, `isInverted`)
+- `app/nps/page.tsx` → `/nps` → NPS (emerald)
+- `app/ehs/page.tsx` — `/ehs` → EHS (orange)
+- `app/ox/page.tsx`  — `/ox`  → OX (pink)
 
 ### Folder Structure
 ```
 mho1-274/
 ├── app/
-│   ├── globals.css       # Design tokens + base styles
-│   ├── layout.tsx        # Root layout — shell (Sidebar + TopBar + main)
-│   └── page.tsx          # Dashboard overview (5 KPI summary cards)
+│   ├── chs/page.tsx
+│   ├── ces/page.tsx
+│   ├── nps/page.tsx
+│   ├── ehs/page.tsx
+│   ├── ox/page.tsx
+│   ├── globals.css
+│   ├── layout.tsx        # Root shell
+│   └── page.tsx          # Dashboard overview
 ├── components/
-│   ├── Sidebar.tsx       # Left nav (Client Component)
-│   └── TopBar.tsx        # Top header (Server Component)
-├── lib/
-│   └── data.ts           # Centralized mock KPI data
-├── types/
-│   └── index.ts          # Shared TypeScript types
-├── PROJECT_STATE.md      # This file
+│   ├── CategoryPage.tsx  # Shared category page shell
+│   ├── KPICard.tsx       # Reusable KPI detail card
+│   ├── Sidebar.tsx
+│   └── TopBar.tsx
+├── lib/data.ts
+├── types/index.ts
+├── PROJECT_STATE.md
 └── ...config files
 ```
 
 ---
 
 ## Next Step
-**Step 3: KPI Category Pages**
-- Individual pages for `/chs`, `/ces`, `/nps`, `/ehs`, `/ox`
-- Each page: category header, 3 KPI detail cards with value / target / trend / description
-- Reusable `KPICard` component
+**Step 4: Polish & Enhancements** (options)
+- Trend sparkline mini-charts per KPI
+- Breadcrumb in TopBar showing current category
+- Empty/loading states
+- Mobile responsive sidebar (hamburger toggle)
 
 ---
 
 ## Run Instructions
 
 ```bash
-# Install dependencies (first time only)
-npm install
-
-# Start development server
-npm run dev -- -p 3001
-
-# Open in browser
-# http://localhost:3001
-
-# Type-check only
-npx tsc --noEmit
-
-# Production build (run after each step to catch errors)
-npm run build
+npm run dev -- -p 3001   # http://localhost:3001
+npx tsc --noEmit         # type-check
+npm run build            # production build
 ```
 
 > **Note:** Port 3000 is occupied on this machine. Always use port 3001.
